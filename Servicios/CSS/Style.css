@@ -1,0 +1,259 @@
+﻿body {
+    background: #f3f4f6;
+    font-family: "Segoe UI", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #111;
+}
+
+.container-main {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+
+.title-page {
+    font-size: 32px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 5px;
+    color: #111;
+}
+
+.subtitle-page {
+    font-size: 15px;
+    text-align: center;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: #111;
+}
+
+
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group label {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #333;
+    }
+
+.input {
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 0px 12px;
+    font-size: 14px;
+    outline: none;
+    background: #fafafa;
+    transition: 0.2s ease-in-out;
+}
+
+    .input:focus {
+        border-color: #111;
+        background: white;
+        box-shadow: 0px 0px 0px 3px rgba(0, 0, 0, 0.12);
+    }
+
+
+.row-service-add {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    margin-bottom: 18px;
+}
+
+
+.btn {
+    border: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+    .btn:hover {
+        transform: translateY(-2px);
+        opacity: 0.95;
+    }
+
+.btn-primary {
+    background: #111;
+    color: white;
+}
+
+.btn-secondary {
+    background: #777;
+    color: white;
+}
+
+.btn-success {
+    background: #2791F5;
+    color: white;
+}
+
+.btn-danger {
+    background: #d32f2f;
+    color: white;
+}
+
+
+.gridview {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+    .gridview th {
+        background: #111;
+        color: white;
+        font-size: 13px;
+        padding: 12px;
+        text-align: left;
+    }
+
+    .gridview td {
+        font-size: 13px;
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .gridview tr:nth-child(even) {
+        background: #f7f7f7;
+    }
+
+    .gridview tr:hover {
+        background: #ececec;
+    }
+
+
+.row-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+    .row-actions .btn-secondary,
+    .row-actions .btn-success {
+        min-width: 180px;
+        height: 45px;
+    }
+
+
+.resumen-pago {
+    background: #121111;
+    color: white;
+    padding: 18px 22px;
+    border-radius: 16px;
+    width: 280px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+    .resumen-pago h4 {
+        margin: 0 0 15px 0;
+        font-size: 16px;
+        font-weight: 800;
+        color: white;
+    }
+
+    .resumen-pago .fila-pago {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+        .resumen-pago .fila-pago span {
+            color: #ddd;
+        }
+
+        .resumen-pago .fila-pago b {
+            color: white;
+        }
+
+    .resumen-pago hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        margin: 12px 0;
+    }
+
+    .resumen-pago .total {
+        display: flex;
+        justify-content: space-between;
+        font-size: 17px;
+        font-weight: 900;
+    }
+
+
+.lbl-error {
+    display: block;
+    margin: 15px 0;
+    padding: 12px 15px;
+    background: #ffe6e6;
+    border: 1px solid #ffb3b3;
+    color: #b10000;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+
+@media (max-width: 900px) {
+    .grid-form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .row-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .resumen-pago {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-form {
+        grid-template-columns: 1fr;
+    }
+
+    .row-service-add {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
