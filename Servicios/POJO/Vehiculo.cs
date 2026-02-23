@@ -5,6 +5,7 @@ using System.Web;
 
 namespace Servicios.POJO
 {
+    [Serializable]
     public class Vehiculo
     {
         public string Num_serie { get; set; }

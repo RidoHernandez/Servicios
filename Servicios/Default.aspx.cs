@@ -14,13 +14,52 @@ namespace Servicios
 {
     public partial class _Default : Page
     {
-        private Cliente cliente;
-        private Vehiculo vehiculo;
         private List<Servicio> servicios;
         private List<Cliente> clientes;
         private List<Vehiculo> vehiculos;
-        private Servicio servicio;
-        private decimal total;
+        private Vehiculo vehiculo
+        {
+            get
+            {
+                return ViewState["vehiculo"] as Vehiculo;
+            }
+            set
+            {
+                ViewState["vehiculo"] = value;
+            }
+        }
+        private Cliente cliente
+        {
+            get
+            {
+                return ViewState["cliente"] as Cliente;
+            }
+            set
+            {
+                ViewState["cliente"] = value;
+            }
+        }
+        private Servicio ServicioTemporal
+        {
+            get { return (Servicio)ViewState["ServicioTemporal"]; }
+            set { ViewState["ServicioTemporal"] = value; }
+        }
+
+        private decimal total
+        {
+            get
+            {
+                if (ViewState["total"] == null)
+                    ViewState["total"] = 0m;
+
+                return (decimal)ViewState["total"];
+            }
+            set
+            {
+                ViewState["total"] = value;
+            }
+        }
+
         protected async void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -161,7 +200,7 @@ namespace Servicios
 
         protected async void ddlServicios_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(ddlVehiculos.SelectedValue))
+            if (!string.IsNullOrEmpty(ddlServicios.SelectedValue))
             {
                 int claveServicio = int.Parse(ddlServicios.SelectedValue);
 
@@ -169,27 +208,10 @@ namespace Servicios
                 {
                     DAOServicio daoServicio = new DAOServicio();
 
-                    servicio = await daoServicio.ObtenerPorClave(claveServicio);
+                    ServicioTemporal = await daoServicio.ObtenerPorClave(claveServicio);
 
-                    if (servicio != null)
-                    {
-                        
-                        var lista = ServiciosSeleccionados;
-                        
-                        if (!lista.Any(s => s.Clave_servicio == servicio.Clave_servicio))
-                        {
-                            lista.Add(servicio);
-                        }
+                    lblError.Text = "Servicio listo para agregar ✔";
 
-                        ServiciosSeleccionados = lista;
-                        
-                        gvServicios.DataSource = lista;
-                        gvServicios.DataBind();
-                        
-                        decimal total = lista.Sum(s => s.Costo_base);
-                        lblTotal.Text = total.ToString("C2");
-
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -198,7 +220,7 @@ namespace Servicios
             }
         }
 
-        //Mover esto aparte en otra carpeta para cargar datos de servicios seleccionados
+
         private List<Servicio> ServiciosSeleccionados
         {
             get
@@ -212,6 +234,128 @@ namespace Servicios
             {
                 ViewState["ServiciosSeleccionados"] = value;
             }
+        }
+
+        protected void btnAgregarServicio_Click(object sender, EventArgs e)
+        {
+            if (ServicioTemporal != null)
+            {
+                var lista = ServiciosSeleccionados;
+
+                if (!lista.Any(s => s.Clave_servicio == ServicioTemporal.Clave_servicio))
+                {
+                    lista.Add(ServicioTemporal);
+                    total += ServicioTemporal.Costo_base;
+                }
+
+                ServiciosSeleccionados = lista;
+
+                gvServicios.DataSource = lista;
+                gvServicios.DataBind();
+
+                lblTotal.Text = total.ToString("C2");
+
+                ServicioTemporal = null;
+
+                if (gvServicios.Rows.Count > 0)
+                {
+                    gvServicios.UseAccessibleHeader = true;
+                    gvServicios.HeaderRow.TableSection = TableRowSection.TableHeader;
+                }
+            }
+        }
+
+        protected void btnQuitar_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+
+            int claveServicio = int.Parse(btn.CommandArgument);
+
+            var lista = ServiciosSeleccionados;
+
+            var servicioAEliminar = lista
+                .FirstOrDefault(s => s.Clave_servicio == claveServicio);
+
+            if (servicioAEliminar != null)
+            {
+                lista.Remove(servicioAEliminar);
+
+                total -= servicioAEliminar.Costo_base;
+
+                if (total < 0)
+                    total = 0;
+
+                ServiciosSeleccionados = lista;
+            }
+
+            gvServicios.DataSource = ServiciosSeleccionados;
+            gvServicios.DataBind();
+
+            lblTotal.Text = total.ToString("C2");
+        }
+
+        protected void btnConfirmar_Click(object sender, EventArgs e)
+        {
+
+            if (cliente == null || vehiculo == null)
+            {
+                lblError.Text = "❌ Falta seleccionar cliente o vehículo.";
+                return;
+            }
+
+            if (ServiciosSeleccionados == null || !ServiciosSeleccionados.Any())
+            {
+                lblError.Text = "❌ No hay servicios seleccionados.";
+                return;
+            }
+
+            // Construir resumen
+            System.Text.StringBuilder resumen = new System.Text.StringBuilder();
+
+            resumen.Append("<h3>📋 Resumen de Orden</h3>");
+
+            // Cliente
+            resumen.Append("<b>Cliente:</b><br/>");
+            resumen.Append($"Clave: {cliente.Clave_cliente} - ");
+            resumen.Append($"{cliente.Nombre}<br/><br/>");
+
+            // Vehículo
+            resumen.Append("<b>Vehículo:</b><br/>");
+            resumen.Append($"Serie: {vehiculo.Num_serie} - ");
+            resumen.Append($"{vehiculo.Marca} {vehiculo.Modelo}<br/><br/>");
+
+            // Servicios
+            resumen.Append("<b>Servicios:</b><br/>");
+
+            foreach (var servicio in ServiciosSeleccionados)
+            {
+                resumen.Append($"• {servicio.Clave_servicio} - ");
+                resumen.Append($"{servicio.Nombre_servicio} ");
+                resumen.Append($"({servicio.Costo_base:C})<br/>");
+            }
+
+            resumen.Append("<br/>");
+
+            
+            resumen.Append($"<b>Total:</b> {total:C}");
+
+
+            lblResumen.Text = resumen.ToString();
+
+            //Transacciones de base de datos para guardar la orden, servicios y detalles
+
+
+            //Limpieza de los registros temporales
+            ServiciosSeleccionados = new List<Servicio>();
+            total = 0m;
+            ServicioTemporal = null;
+            cliente = null;
+            vehiculo = null;
+
+            gvServicios.DataSource = null;
+            gvServicios.DataBind();
+
+            lblTotal.Text = "$0.00";
         }
     }
 }

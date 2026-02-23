@@ -178,7 +178,7 @@
                     </div>
 
                     <div>
-                        <asp:Button ID="btnAgregarServicio" runat="server" Text="➕ Agregar Servicio" CssClass="btn btn-primary" />
+                        <asp:Button ID="btnAgregarServicio" runat="server" Text="➕ Agregar Servicio" CssClass="btn btn-primary" OnClick="btnAgregarServicio_Click" />
                     </div>
 
                 </div>
@@ -196,7 +196,7 @@
 
                         <asp:TemplateField HeaderText="Acciones">
                             <ItemTemplate>
-                                <asp:Button ID="btnQuitar" runat="server" Text="Quitar" CssClass="btn btn-danger" />
+                                <asp:Button ID="btnQuitar" runat="server" Text="Quitar" CssClass="btn btn-danger" CommandArgument='<%# Eval("Clave_servicio") %>' OnClick="btnQuitar_Click" />
                             </ItemTemplate>
                         </asp:TemplateField>
 
@@ -231,8 +231,9 @@
 
                 <div class="row-actions">
                     <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-secondary" />
-                    <asp:Button ID="btnConfirmar" runat="server" Text="Confirmar Registro" CssClass="btn btn-success" />
+                    <asp:Button ID="btnConfirmar" runat="server" Text="Confirmar Registro" CssClass="btn btn-success" OnClick="btnConfirmar_Click" />
                 </div>
+                <asp:Label ID="lblResumen" runat="server" EnableViewState="false" CssClass="Resumen"/>
 
             </div>
 

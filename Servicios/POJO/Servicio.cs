@@ -5,6 +5,7 @@ using System.Web;
 
 namespace Servicios.POJO
 {
+    [Serializable]
     public class Servicio
     {
         public int Clave_servicio { get; set; }
