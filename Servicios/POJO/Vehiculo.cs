@@ -7,7 +7,8 @@ namespace Servicios.POJO
 {
     [Serializable]
     public class Vehiculo
-    {
+    {   
+        public int Id_vehiculo { get; set; }
         public string Num_serie { get; set; }
         public int Clave_cliente { get; set; }
 

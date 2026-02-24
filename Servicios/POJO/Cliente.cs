@@ -7,7 +7,7 @@ namespace Servicios.POJO
 {
     [Serializable]
     public class Cliente
-    {
+    {   
         public int Clave_cliente { get; set; }
         public string RFC { get; set; }
 

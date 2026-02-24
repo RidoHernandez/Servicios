@@ -324,6 +324,7 @@
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
     <Compile Include="DAO\DAOCliente.cs" />
+    <Compile Include="DAO\DAOOrdernCompleta.cs" />
     <Compile Include="DAO\DAOServicio.cs" />
     <Compile Include="DAO\DAOVehiculo.cs" />
     <Compile Include="Data\ConexionBD.cs" />
@@ -339,6 +340,7 @@
     </Compile>
     <Compile Include="POJO\Cliente.cs" />
     <Compile Include="POJO\OrdenServicio.cs" />
+    <Compile Include="POJO\Orden_OrdenServicio.cs" />
     <Compile Include="POJO\Servicio.cs" />
     <Compile Include="POJO\Vehiculo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

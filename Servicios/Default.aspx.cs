@@ -3,6 +3,7 @@ using Servicios.POJO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -99,7 +100,7 @@ namespace Servicios
 
                 ddlVehiculos.DataSource = vehiculos;
                 ddlVehiculos.DataTextField = "Modelo";
-                ddlVehiculos.DataValueField = "Num_Serie";
+                ddlVehiculos.DataValueField = "Num_serie";
                 ddlVehiculos.DataBind();
 
                 ddlVehiculos.Items.Insert(0, new ListItem("-- Selecciona un Vehiculo --", ""));
@@ -176,7 +177,7 @@ namespace Servicios
 
                 try
                 {
-                    DAOVehiculo daoVehiculo= new DAOVehiculo();
+                    DAOVehiculo daoVehiculo = new DAOVehiculo();
 
                     vehiculo = await daoVehiculo.ObtenerPorNumSerie(numSerie);
 
@@ -294,7 +295,7 @@ namespace Servicios
             lblTotal.Text = total.ToString("C2");
         }
 
-        protected void btnConfirmar_Click(object sender, EventArgs e)
+        protected async void btnConfirmar_Click(object sender, EventArgs e)
         {
 
             if (cliente == null || vehiculo == null)
@@ -306,6 +307,13 @@ namespace Servicios
             if (ServiciosSeleccionados == null || !ServiciosSeleccionados.Any())
             {
                 lblError.Text = "❌ No hay servicios seleccionados.";
+                return;
+            }
+
+            DateTime fechaEstimada;
+            if (!DateTime.TryParse(txtFechaEstimada.Text, out fechaEstimada))
+            {
+                lblError.Text = "❌ Formato de fecha inválido.";
                 return;
             }
 
@@ -336,26 +344,62 @@ namespace Servicios
 
             resumen.Append("<br/>");
 
-            
+
             resumen.Append($"<b>Total:</b> {total:C}");
 
 
             lblResumen.Text = resumen.ToString();
 
             //Transacciones de base de datos para guardar la orden, servicios y detalles
+            try
+            {
+                OrdenServicio ordenServicio = new OrdenServicio
+                {
+                    Id_vehiculo = vehiculo.Id_vehiculo,
+                    Fecha_ingreso = DateTime.Now,
+                    Fecha_estimada_entrega = fechaEstimada,
+                    Fecha_real_entrega = null,
+                    Estado = "En Proceso",
+                    Costo_total = total
+                };
 
+                List<Orden_OrdenServicio> detalles = new List<Orden_OrdenServicio>();
+                foreach (var servicio in ServiciosSeleccionados)
+                {
+                    Orden_OrdenServicio detalle = new Orden_OrdenServicio
+                    {   
+                        Folio_orden = ordenServicio.Folio_orden,
+                        Clave_servicio = servicio.Clave_servicio,
+                        Cantidad = 1,
+                        Precio_aplicado = servicio.Costo_base
+                    };
+                    detalles.Add(detalle);
+                }
 
-            //Limpieza de los registros temporales
-            ServiciosSeleccionados = new List<Servicio>();
-            total = 0m;
-            ServicioTemporal = null;
-            cliente = null;
-            vehiculo = null;
+                DAOOrdernCompleta daoOrdernCompleta = new DAOOrdernCompleta();
+                await daoOrdernCompleta.InsertarOrdenCompleta(ordenServicio, detalles);
 
-            gvServicios.DataSource = null;
-            gvServicios.DataBind();
+                //Mensake de que todo esta bien
+                lblResumen.Text = "Los datos se insertaron correctamente. ✔<br/><br/>" + lblResumen.Text;
 
-            lblTotal.Text = "$0.00";
+                //Limpieza de los registros temporales
+                ServiciosSeleccionados = new List<Servicio>();
+                total = 0m;
+                ServicioTemporal = null;
+                cliente = null;
+                vehiculo = null;
+
+                gvServicios.DataSource = null;
+                gvServicios.DataBind();
+
+                lblTotal.Text = "$0.00";
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = "❌ Error: " + ex.Message;
+                return;
+            }
+
         }
     }
 }

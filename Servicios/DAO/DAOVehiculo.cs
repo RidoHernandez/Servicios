@@ -18,8 +18,7 @@ namespace Servicios.DAO
 
             using (SqlConnection con = new ConexionBD().ObtenerConexion())
             {
-                string query = @"SELECT Num_serie, Clave_cliente, Placas, Marca, 
-                                Modelo, Anio, Color, Kilometraje_actual, Tipo
+                string query = @"SELECT *
                          FROM Vehiculos
                          WHERE Clave_cliente = @IdCliente";
 
@@ -35,21 +34,16 @@ namespace Servicios.DAO
                         while (await reader.ReadAsync())
                         {
                             Vehiculo vehiculo = new Vehiculo
-                            {
-                                Num_serie = reader["Num_serie"]?.ToString(),
-                                Clave_cliente = reader["Clave_cliente"] != DBNull.Value
-                                                ? Convert.ToInt32(reader["Clave_cliente"])
-                                                : 0,
+                            {   
+                                Id_vehiculo= Convert.ToInt32(reader["Id_vehiculo"]),
+                                Num_serie = reader["Numero_serie"]?.ToString(),
+                                Clave_cliente = reader["Clave_cliente"] != DBNull.Value? Convert.ToInt32(reader["Clave_cliente"]): 0,
                                 Placas = reader["Placas"]?.ToString(),
                                 Marca = reader["Marca"]?.ToString(),
                                 Modelo = reader["Modelo"]?.ToString(),
-                                Anio = reader["Anio"] != DBNull.Value
-                                       ? Convert.ToInt32(reader["Anio"])
-                                       : 0,
+                                Anio = reader["Anio"] != DBNull.Value? Convert.ToInt32(reader["Anio"]): 0,
                                 Color = reader["Color"]?.ToString(),
-                                Kilometraje_actual = reader["Kilometraje_actual"] != DBNull.Value
-                                                     ? Convert.ToInt32(reader["Kilometraje_actual"])
-                                                     : 0,
+                                Kilometraje_actual = reader["Kilometraje_actual"] != DBNull.Value? Convert.ToInt32(reader["Kilometraje_actual"]): 0,
                                 Tipo = reader["Tipo"]?.ToString()
                             };
 
@@ -70,10 +64,10 @@ namespace Servicios.DAO
             {
                 await connection.OpenAsync();
 
-                string query = @"SELECT Num_serie, Clave_cliente, Placas, Marca, Modelo,
+                string query = @"SELECT Numero_serie, Clave_cliente, Placas, Marca, Modelo,
                                 Anio, Color, Kilometraje_actual, Tipo
                          FROM Vehiculos
-                         WHERE Num_serie = @NumSerie";
+                         WHERE Numero_serie = @NumSerie";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -85,7 +79,7 @@ namespace Servicios.DAO
                         {
                             vehiculo = new Vehiculo
                             {
-                                Num_serie = reader["Num_serie"]?.ToString(),
+                                Num_serie = reader["Numero_serie"]?.ToString(),
                                 Clave_cliente = reader.GetInt32(reader.GetOrdinal("Clave_cliente")),
                                 Placas = reader["Placas"]?.ToString(),
                                 Marca = reader["Marca"]?.ToString(),

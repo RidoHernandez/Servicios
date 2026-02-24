@@ -168,6 +168,11 @@
             <div class="card">
                 <div class="card-title">🛠 Servicios a Realizar</div>
 
+                <div class="form-group">
+                    <label>Fecha Estimada de Entrega</label>
+                    <asp:TextBox ID="txtFechaEstimada" runat="server" CssClass="input" TextMode="Date"></asp:TextBox>
+                </div>
+
                 <div class="row-service-add">
 
                     <div class="form-group" style="flex: 1;">

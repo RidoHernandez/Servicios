@@ -8,9 +8,7 @@ namespace Servicios.POJO
     public class OrdenServicio
     {
         public int Folio_orden { get; set; }
-
-        
-        public string Num_serie { get; set; }
+        public int Id_vehiculo { get; set; }
 
         public DateTime Fecha_ingreso { get; set; }
         public DateTime Fecha_estimada_entrega { get; set; }
