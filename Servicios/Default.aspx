@@ -235,7 +235,7 @@
                 </div>
 
                 <div class="row-actions">
-                    <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-secondary" />
+                    <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelar_Click" />
                     <asp:Button ID="btnConfirmar" runat="server" Text="Confirmar Registro" CssClass="btn btn-success" OnClick="btnConfirmar_Click" />
                 </div>
                 <asp:Label ID="lblResumen" runat="server" EnableViewState="false" CssClass="Resumen"/>

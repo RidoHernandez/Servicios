@@ -292,6 +292,9 @@ namespace Servicios
             gvServicios.DataSource = ServiciosSeleccionados;
             gvServicios.DataBind();
 
+            lblSubtotal.Text = total.ToString("C2");
+            lblIVA.Text = (total * 0.16m).ToString("C2");
+            total += (total * 0.16m);
             lblTotal.Text = total.ToString("C2");
         }
 
@@ -329,7 +332,7 @@ namespace Servicios
 
             // Vehículo
             resumen.Append("<b>Vehículo:</b><br/>");
-            resumen.Append($"Serie: {vehiculo.Num_serie} - ");
+            resumen.Append($"Id_Vehiculo: {vehiculo.Id_vehiculo} - ");
             resumen.Append($"{vehiculo.Marca} {vehiculo.Modelo}<br/><br/>");
 
             // Servicios
@@ -369,6 +372,7 @@ namespace Servicios
                     Orden_OrdenServicio detalle = new Orden_OrdenServicio
                     {   
                         Folio_orden = ordenServicio.Folio_orden,
+                        
                         Clave_servicio = servicio.Clave_servicio,
                         Cantidad = 1,
                         Precio_aplicado = servicio.Costo_base
@@ -393,6 +397,34 @@ namespace Servicios
                 gvServicios.DataBind();
 
                 lblTotal.Text = "$0.00";
+                lblSubtotal.Text = "$0.00";
+                lblIVA.Text = "$0.00";
+                lblResumen.Text = "";
+                lblError.Text = "";
+
+                //Limpieza de cajas de texto
+                txtKilometraje.Text = "";
+                txtMarca.Text = "";
+                txtColor.Text = "";
+                txtModelo.Text = "";
+                txtPlacas.Text = "";
+                txtAnio.Text = "";
+                txtNumSerie.Text = "";
+
+                txtRFC.Text = "";
+                txtNombre.Text = "";
+                txtApellidoPaterno.Text = "";
+                txtApellidoMaterno.Text = "";
+                txtCalle.Text = "";
+                txtCiudad.Text = "";
+                txtCorreo.Text = "";
+                txtCP.Text = "";
+                txtTelefono1.Text = "";
+                txtTelefono2.Text = "";
+                txtTelefono3.Text = "";
+                txtColonia.Text = "";
+                txtFechaRegistro.Text = "";
+
             }
             catch (Exception ex)
             {
@@ -400,6 +432,48 @@ namespace Servicios
                 return;
             }
 
+        }
+
+        protected void btnCancelar_Click(object sender, EventArgs e)
+        {
+            //Limpieza de los registros temporales
+            ServiciosSeleccionados = new List<Servicio>();
+            total = 0m;
+            ServicioTemporal = null;
+            cliente = null;
+            vehiculo = null;
+
+            gvServicios.DataSource = null;
+            gvServicios.DataBind();
+
+            lblTotal.Text = "$0.00";
+            lblSubtotal.Text = "$0.00";
+            lblIVA.Text = "$0.00";
+            lblResumen.Text = "";
+            lblError.Text = "";
+
+            //Limpieza de cajas de texto
+            txtKilometraje.Text = "";
+            txtMarca.Text = "";
+            txtColor.Text = "";
+            txtModelo.Text = "";
+            txtPlacas.Text = "";
+            txtAnio.Text = "";
+            txtNumSerie.Text = "";
+
+            txtRFC.Text = "";
+            txtNombre.Text = "";
+            txtApellidoPaterno.Text = "";
+            txtApellidoMaterno.Text = "";
+            txtCalle.Text = "";
+            txtCiudad.Text = "";
+            txtCorreo.Text = "";
+            txtCP.Text = "";
+            txtTelefono1.Text = "";
+            txtTelefono2.Text = "";
+            txtTelefono3.Text = "";
+            txtColonia.Text = "";
+            txtFechaRegistro.Text = "";
         }
     }
 }

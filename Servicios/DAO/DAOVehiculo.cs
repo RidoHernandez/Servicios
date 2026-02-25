@@ -64,8 +64,7 @@ namespace Servicios.DAO
             {
                 await connection.OpenAsync();
 
-                string query = @"SELECT Numero_serie, Clave_cliente, Placas, Marca, Modelo,
-                                Anio, Color, Kilometraje_actual, Tipo
+                string query = @"SELECT *
                          FROM Vehiculos
                          WHERE Numero_serie = @NumSerie";
 
@@ -79,6 +78,7 @@ namespace Servicios.DAO
                         {
                             vehiculo = new Vehiculo
                             {
+                                Id_vehiculo = Convert.ToInt32(reader["Id_vehiculo"]),
                                 Num_serie = reader["Numero_serie"]?.ToString(),
                                 Clave_cliente = reader.GetInt32(reader.GetOrdinal("Clave_cliente")),
                                 Placas = reader["Placas"]?.ToString(),
